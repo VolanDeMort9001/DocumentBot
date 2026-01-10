@@ -1,10 +1,11 @@
 import asyncio
+
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from infra.routers.router import router
 import os
 from dotenv import load_dotenv
-from infra.routers.router import router
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -14,13 +15,27 @@ bot = Bot(
 )
 dp = Dispatcher()
 
-def run_bot():
+
+async def main():
+    # Включаем роутер
     dp.include_router(router)
-    bot.delete_webhook(drop_pending_updates=True)
+
+    print("🤖 Бот запускается...")
+
+    # Удаляем вебхук и пропускаем накопившиеся обновления
+    await bot.delete_webhook(drop_pending_updates=True)
+
+    print("✅ Вебхук удален, начинаю polling...")
+
     try:
-        dp.start_polling(bot)
+        # Запускаем поллинг
+        await dp.start_polling(bot)
+    except Exception as e:
+        print(f"❌ Ошибка при запуске бота: {e}")
     finally:
-        bot.session.close()
+        # Закрываем сессию бота
+        await bot.session.close()
+        print("👋 Бот остановлен")
 
 if __name__ == "__main__":
-    run_bot()
+    asyncio.run(main())
