@@ -6,10 +6,11 @@ from infra.keyboards.keyboard import get_sample_menu
 
 router = Router()
 
-indexes = [True for i in range(len(samples))]
+indexes = [True for i in range(len(samples))] #Хранилище отчетов
 
 @router.message(Command("start"))
 async def start_menu(message: Message) -> None:
+    #Стартовое меню для начала создания отчета
     global indexes
     indexes = [True] * len(samples)
     await message.answer("Здравствуй!\nЯ помогу тебе с написанием шаблонных отчетов по работе\n"
@@ -18,6 +19,7 @@ async def start_menu(message: Message) -> None:
 
 @router.callback_query(F.data.startswith("sample"))
 async def process_sample(cb: CallbackQuery) -> None:
+    #Обновленное меню с возможностью завершения отчета и с несколькими пропавшими шаблонами
     index = int(cb.data.split()[1])
     indexes[index] = False
     await cb.message.edit_text("Отлично!\nМожешь выбрать еще шаблоны из списка или закончить отчет.", reply_markup=get_sample_menu(indexes))
@@ -25,6 +27,7 @@ async def process_sample(cb: CallbackQuery) -> None:
 
 @router.callback_query(F.data == "create_summary")
 async def summary(cb: CallbackQuery) -> None:
+    #Создание и отправка документа
     create_doc(indexes)
     await cb.message.edit_text("Ваш отчет создается...")
     await cb.message.answer_document(

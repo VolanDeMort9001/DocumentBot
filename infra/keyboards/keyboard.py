@@ -2,8 +2,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from commands.create_document import samples
 
 
-
 def get_sample_menu(indexes: list[bool]) -> InlineKeyboardMarkup:
+    #Создание документа
     buttons = [
         [InlineKeyboardButton(text=samples[i][1], callback_data=str(f"sample {i}"))] for i in range(len(indexes)) if indexes[i]
     ]

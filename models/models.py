@@ -4,6 +4,7 @@ from typing import Iterable
 
 
 def create_document(text: Iterable[str]) -> None:
+    #Создание документа
     doc = Document()
     print(text)
     doc.add_paragraph("Коллеги, добрый день!\n\nБлагодарим за вовремя присланный мониторинговый отчет.\nПо результатам его проверки просим учесть следующие рекомендации и доработать отчет в срок до:\n")
